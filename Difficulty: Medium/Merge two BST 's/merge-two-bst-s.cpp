@@ -96,53 +96,22 @@ class Solution {
   public:
     // Function to return a list of integers denoting the node
     // values of both the BST in a sorted order.
-    void bi(Node* root, vector<int>&a)
+    void inorderroot(Node *root,multiset<int> &s)
     {
-        if(root==NULL)
-            return;
-        bi(root->left,a);
-        a.emplace_back(root->data);
-        bi(root->right,a);
-        return;
+        if(root!=NULL)
+        {
+            inorderroot(root->left,s);
+            s.insert(root->data);
+            inorderroot(root->right,s);
+        }
     }
     vector<int> merge(Node *root1, Node *root2) {
         // Your code here
-        vector<int>a,b,ans;
-        bi(root1,a);
-        bi(root2,b);
-        int i=0,j=0;
-        while(i<a.size() and j<b.size())
-        {
-            if(a[i]<b[j])
-            {
-                ans.emplace_back(a[i]);
-                i++;
-            }
-            else if(a[i]==b[j])
-            {
-                ans.emplace_back(a[i]);
-                ans.emplace_back(b[j]);
-                i++;
-                j++;
-            }
-            else
-            {
-                ans.emplace_back(b[j]);
-                j++;
-            }
-        }
-        while(i<a.size())
-        {
-            ans.emplace_back(a[i]);
-            i++;
-        }
-        
-        while(j<b.size())
-        {
-            ans.emplace_back(b[j]);
-            j++;
-        }
-        return ans;
+        multiset<int> s;
+        inorderroot(root1, s);
+        inorderroot(root2, s);
+        vector<int> res(s.begin(),s.end());
+        return res;
     }
 };
 
