@@ -106,62 +106,53 @@ class Node {
 */
 
 class Solution {
-  public:
-    vector<int> ans;
-    
-    // inserts all the left nodes except the leaf nodes
-    void leftInsert(Node* root){
-        // inserting the current node
-        if(root->left!=NULL || root->right!=NULL) ans.push_back(root->data);
-        // conditional recursive calls (base case handled)
-        if(root->left!=NULL) leftInsert(root->left);
-        else if(root->right!=NULL) leftInsert(root->right);
-        else return;
+  private:
+    bool isLeaf(Node* root){
+        return (root->left == NULL && root->right == NULL);
     }
-    
-    // inserts all the leaf nodes
-    void bottomInsert(Node* root){
-        // base case
-        if(root->left==NULL && root->right==NULL){
-            ans.push_back(root->data);
+    void addLeftBoundary(Node* root, vector<int> &ans){
+        Node* curr = root->left;
+        while(curr){
+            if(!isLeaf(curr)) ans.push_back(curr->data);
+            if(curr->left) curr = curr->left;
+            else curr = curr->right;
         }
-        // recursive calls, first left then right
-        if(root->left) bottomInsert(root->left);
-        if(root->right) bottomInsert(root->right);
+    }
+    void addLeafNodes(Node* root, vector<int> &ans){
+        if(!root) return ;
+        if(isLeaf(root)){
+            ans.push_back(root->data);
+            return;
+        }
+        addLeafNodes(root->left, ans);
+        addLeafNodes(root->right, ans);
     }
     
-    // inserts all the right nodes except the leaf nodes
-    void rightInsert(Node* root){
-        // conditional recursive calls (base case handled)
-        if(root->right!=NULL) rightInsert(root->right);
-        else if(root->left!=NULL) rightInsert(root->left);
-        else return;
-        // inserting the current node
-        ans.push_back(root->data);
+    void addRightBoundary(Node* node, vector<int> &ans) {
+        Node* curr = node->right;
+        vector<int> tmp;
+        while(curr){
+            if(!isLeaf(curr)) tmp.push_back(curr->data);
+            if(curr->right) curr = curr->right;
+            else curr = curr->left;
+        }
+        for(int  i = tmp.size() - 1; i >= 0; i--) {
+            ans.push_back(tmp[i]);
+        }
     }
     
+  public:
     vector<int> boundaryTraversal(Node *root) {
         // code here
-        
-        if(root==NULL) return ans;
-        
-        ans.push_back(root->data);
-        
-        if(root->left==NULL && root->right==NULL) return ans;
-        
-        // left sub-tree exists ??
-        if(root->left!=NULL){
-            leftInsert(root->left);
-        }
-        
-        bottomInsert(root);
-        
-        // right sub-tree exist??
-        if(root->right!=NULL){
-            rightInsert(root->right);
-        }
-        
-        
+        vector<int> ans;
+        // First  -> left traversal
+        // second -> inorder traversal with only leaf
+        // Third  -> right traversal
+        if(!root) return ans;
+        if(!isLeaf(root)) ans.push_back(root->data); //If the root is not a leaf node
+        addLeftBoundary(root, ans);
+        addLeafNodes(root, ans);
+        addRightBoundary(root, ans);
         return ans;
     }
 };
