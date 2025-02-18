@@ -19,10 +19,10 @@ struct Node {
 // } Driver Code Ends
 class Solution {
   public:
-    bool f(Node* root, int leftMin, int rightMax) {
+    bool f(Node* root, int lrange, int rrange) {
         if(!root) return true;
-        if(root->data <= leftMin || root->data >= rightMax) return false;
-        return f(root->left, leftMin, root->data) && f(root->right, root->data, rightMax);
+        if(root->data < lrange || root->data > rrange) return false;
+        return f(root->left, lrange, root->data) && f(root->right, root->data, rrange);
     }
     // Function to check whether a Binary Tree is BST or not.
     bool isBST(Node* root) {
