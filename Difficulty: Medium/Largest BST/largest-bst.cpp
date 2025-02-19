@@ -99,62 +99,36 @@ struct Node {
     }
 };*/
 
+class NodeValue{
+    public:
+    int maxNode, minNode, maxSize;
+    NodeValue(int minNode, int maxNode, int maxSize) {
+        this->maxNode = maxNode;
+        this->minNode = minNode;
+        this->maxSize = maxSize;
+    }
+};
+
 class Solution{
     public:
+    NodeValue f(Node* root){
+        if(!root){
+            return NodeValue(INT_MAX, INT_MIN, 0);
+        }
+        auto left = f(root->left);
+        auto right = f(root->right);
+        
+        if(left.maxNode < root->data && root->data < right.minNode){
+            return NodeValue(min(root->data, left.minNode), max(root->data, right.maxNode), left.maxSize + right.maxSize + 1);
+        }
+        return NodeValue(INT_MIN, INT_MAX, max(left.maxSize, right.maxSize));
+    }
     /*You are required to complete this method */
     // Return the size of the largest sub-tree which is also a BST
-    int bstSize;
-    int getSize(Node* root) {
-        if (root == nullptr) {
-            return 0;
-        }
-        return 1 + getSize(root->left) + getSize(root->right);
-    }
-    int maxVal(Node* root) {
-        int ans = INT_MIN;
-        if (root->left != nullptr) {
-            ans = max(ans, maxVal(root->left));
-        }
-        ans = std::max(ans, root->data);
-        if (root->right != nullptr) {
-            ans = max(ans, maxVal(root->right));
-        }
-        return ans;
-    }
-    int minVal(Node* root) {
-        int ans = INT_MAX;
-        if (root->left != nullptr) {
-            ans = std::min(ans, minVal(root->left));
-        }
-        ans = min(ans, root->data);
-        if (root->right != nullptr) {
-            ans = min(ans, minVal(root->right));
-        }
-        return ans;
-    }
-    bool isBst(Node* root) {
-        if (root == nullptr) {
-            return true;
-        }
-        if (root->left != nullptr && maxVal(root->left) >= root->data) {
-            return false;
-        }
-        if (root->right != nullptr && minVal(root->right) <= root->data) {
-            return false;
-        }
-        if (!isBst(root->left) || !isBst(root->right)) {
-            return false;
-        }
-        return true;
-    }
     int largestBst(Node *root)
     {
     	//Your code here
-    	if (isBst(root)) {
-            bstSize = 0;
-            return getSize(root);
-        }
-        return max(largestBst(root->left), largestBst(root->right));
+    	return f(root).maxSize;
     }
 };
 
