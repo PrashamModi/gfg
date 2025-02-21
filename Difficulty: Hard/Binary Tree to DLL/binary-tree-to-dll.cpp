@@ -118,29 +118,33 @@ struct Node
 // This function should return head to the DLL
 class Solution {
   public:
-  Node* head=NULL;
-  Node* tail=NULL;
-  void Solve(Node* root){
-      
-      if(root==NULL)
-      return;
-      
-      Solve(root->left);
-      if(head==NULL){
-          head=tail=root;
-      }
-      else{
-          tail->right=root;
-          root->left=tail;
-      }
-      tail=root;
-      Solve(root->right);
-  }
+    Node* head = NULL;
+    Node* tail = NULL;
+    
+    void f(Node* root){
+        if(!root) return;
+        
+        f(root->left);
+        
+        if(head == NULL) {
+            head = tail = root;
+        }
+        else{
+            tail->right = root;
+            root->left = tail;
+            tail = root;
+        }
+        
+        f(root->right);
+    }
     Node* bToDLL(Node* root) {
-       Solve(root);
-       return head;
+        // code here
+        head = tail = NULL;
+        f(root);
+        return head;
     }
 };
+
 
 //{ Driver Code Starts.
 
@@ -158,6 +162,9 @@ int main() {
         Solution ob;
         Node* head = ob.bToDLL(root);
         printList(head);
+
+        cout << "~"
+             << "\n";
     }
     return 0;
 }
