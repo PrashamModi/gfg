@@ -1,48 +1,40 @@
 //{ Driver Code Starts
-#include <cstdio> // for freopen
-#include <iostream>
-#include <sstream>
-#include <string>
-#include <vector>
-
+#include <bits/stdc++.h>
 using namespace std;
 
 
 // } Driver Code Ends
+
 // User function Template for C++
 
 class Solution {
   public:
-    /*  Function to implement Bellman Ford
-     *   edges: vector of vectors which represents the graph
-     *   src: source vertex
-     *   V: number of vertices
-     */
     vector<int> bellmanFord(int V, vector<vector<int>>& edges, int src) {
         // Code here
-        vector<int> dis(V, 1e8);
-        dis[src] = 0;
+        vector<int> dist(V, 1e8);
+        dist[src] = 0;
         for(int i = 0; i < V - 1; i++) {
             for(auto it : edges) {
                 int u = it[0];
                 int v = it[1];
-                int wt = it[2];
-                if(dis[u] != 1e8 && dis[u] + wt < dis[v]) {
-                    dis[v] = dis[u] + wt;
+                int w = it[2];
+                if(dist[u] != 1e8 && dist[u] + w < dist[v]) {
+                    dist[v] = dist[u] + w;
                 }
             }
         }
         for(auto it : edges) {
             int u = it[0];
             int v = it[1];
-            int wt = it[2];
-            if(dis[u] != 1e8 && dis[u] + wt < dis[v]) {
-                return  {-1};
+            int w = it[2];
+            if(dist[u] != 1e8 && dist[u] + w < dist[v]) {
+                return {-1};
             }
         }
-        return dis;
+        return dist;
     }
 };
+
 
 
 //{ Driver Code Starts.
@@ -53,12 +45,12 @@ int main() {
     cin >> t;
     cin.ignore();
     while (t--) {
-        int N, m;
-        cin >> N >> m;
+        int V, E;
+        cin >> V >> E;
 
         vector<vector<int> > edges;
 
-        for (int i = 0; i < m; ++i) {
+        for (int i = 0; i < E; ++i) {
             int u, v, w;
             cin >> u >> v >> w;
 
@@ -74,14 +66,14 @@ int main() {
         cin.ignore();
 
         Solution obj;
-        vector<int> res = obj.bellmanFord(N, edges, src);
+        vector<int> res = obj.bellmanFord(V, edges, src);
 
         for (size_t i = 0; i < res.size(); i++) {
             cout << res[i] << " ";
         }
         cout << "\n";
+        cout << "~" << endl;
     }
     return 0;
 }
-
 // } Driver Code Ends
